@@ -8,9 +8,9 @@ def main():
     clipboardPoller.start()
 
     controller = Controller()
-    controller.start()
     controller.attachModel(clipboardPoller)
     controller.attachView(Application)
+    controller.start()
 
 
 if __name__ == "__main__":
