@@ -5,8 +5,9 @@ import keyboard
 
 class Controller(Thread):
 
-    def __init__(self):
+    def __init__(self, inputWait="ctrl+shift+v"):
         super(Controller, self).__init__()
+        self.inputWait = inputWait
         self.clipboardData = None
         self.view = None
 
@@ -31,7 +32,7 @@ class Controller(Thread):
         self.waitForInput()
 
     def waitForInput(self):
-        keyboard.wait("ctrl+shift+v")
+        keyboard.wait(self.inputWait)
         self.initialiseView()
         self.waitForInput()
 
@@ -39,7 +40,7 @@ class Controller(Thread):
         """
         Open the TKinter window which will show the
         """
-        self.view.initialiseView()
+        self.view.initialiseView(self.clipboardData.clipboardStack, self)
 
     def copyClipboard(self, clipboardText):
-        pass
+        self.clipboardData.newClipboardValue(clipboardText)

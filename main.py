@@ -1,5 +1,5 @@
 from Models import ClipboardPoller
-from Views import StaticViewCreator
+from Views import Application
 from Controllers import Controller
 
 
@@ -10,7 +10,7 @@ def main():
     controller = Controller()
     controller.start()
     controller.attachModel(clipboardPoller)
-    controller.attachView(StaticViewCreator)
+    controller.attachView(Application)
 
 
 if __name__ == "__main__":

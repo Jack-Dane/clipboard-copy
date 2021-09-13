@@ -8,7 +8,7 @@ class ClipboardPoller(Thread, Logger.Logger):
 
     def __init__(self):
         super(ClipboardPoller, self).__init__()
-        self.setupLogging("../Logs/main.log")
+        self.setupLogging("Logs/main.log")
         self.clipboardStack = []
         self.currentClipboardItem = ""
 
@@ -40,3 +40,10 @@ class ClipboardPoller(Thread, Logger.Logger):
         self.currentClipboardItem = item
         self.clipboardStack.insert(0, item)
         self.loggingChange(self.currentClipboardItem)
+
+    def newClipboardValue(self, clipboardValue):
+        """
+        Change the current clipboard without effecting Clipboard Data
+        :param clipboardValue: New clipboard value
+        """
+        pyperclip.copy(clipboardValue)

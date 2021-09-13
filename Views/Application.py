@@ -3,7 +3,21 @@ import tkinter as tk
 from tkinter import ttk
 
 
-class Application(tk.Frame):
+class StaticViewCreator:
+
+    @staticmethod
+    def initialiseView(clipboardStack, controller):
+        """
+        Intialises the Application View
+        :param clipboardStack: a list of clipboard items
+        :param controller: the controller which is calling the view
+        """
+        root = tk.Tk()
+        view = Application(clipboardStack, controller, master=root)
+        view.mainloop()
+
+
+class Application(tk.Frame, StaticViewCreator):
 
     def __init__(self, clipboardStack, controller, master=None):
         super().__init__(master)
@@ -33,7 +47,5 @@ class Application(tk.Frame):
         """
         When item is selected in list the value copied to the clipboard
         """
-        self.controller.copyClipboard()
-        for clipboardItem in self.treeView.selection():
-            pyperclip.copy(self.treeView.item(clipboardItem)["values"][0])
-
+        selectionValue = self.treeView.item(self.treeView.selection()[0])["values"][0]
+        self.controller.copyClipboard(selectionValue)
