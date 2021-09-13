@@ -11,13 +11,16 @@ class Controller(Thread):
         self.clipboardData = None
         self.view = None
 
+    def run(self):
+        super(Controller, self).run()
+        self.waitForInput()
+
     def attachModel(self, clipboardData):
         """
         Attach the backend to the front end
         :param clipboardData: clipboardPoller Class
         """
         self.clipboardData = clipboardData
-
 
     def attachView(self, view):
         """
@@ -26,12 +29,11 @@ class Controller(Thread):
         """
         self.view = view
 
-
-    def run(self):
-        super(Controller, self).run()
-        self.waitForInput()
-
     def waitForInput(self):
+        """
+        Wait till the keyboard input matches watched specified
+        When it does, intialise the view attached
+        """
         keyboard.wait(self.inputWait)
         self.initialiseView()
         self.waitForInput()
@@ -43,4 +45,7 @@ class Controller(Thread):
         self.view.initialiseView(self.clipboardData.clipboardStack, self)
 
     def copyClipboard(self, clipboardText):
+        """
+        Copy the selected text into the users clipboard
+        """
         self.clipboardData.newClipboardValue(clipboardText)
