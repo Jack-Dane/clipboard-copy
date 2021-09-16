@@ -22,6 +22,7 @@ class Application(tk.Frame, StaticViewCreator):
     def __init__(self, clipboardStack, controller, master=None):
         super().__init__(master)
         self.master = master
+
         self.controller = controller
         self.clipboardStack = clipboardStack
         self.pack()
@@ -30,6 +31,14 @@ class Application(tk.Frame, StaticViewCreator):
         self.treeView = ttk.Treeview(self.master, columns=treeViewColumns, show="headings", takefocus=False)
 
         self.configureTreeWidget()
+
+        # confirm button
+        self.confirmButton = ttk.Button(self.master, command=self.confirmClick, text="Confirm")
+        self.confirmButton.pack()
+
+        # cancel button
+        self.cancelButton = ttk.Button(self.master, command=self.cancelClick, text="Cancel")
+        self.cancelButton.pack()
 
     def configureTreeWidget(self):
         """
@@ -40,12 +49,19 @@ class Application(tk.Frame, StaticViewCreator):
         for clipboard in self.clipboardStack:
             self.treeView.insert("", tk.END, values=(clipboard,))
 
-        self.treeView.bind('<<TreeviewSelect>>', self.clipboardClick)
         self.treeView.pack()
 
-    def clipboardClick(self, event):
+    def confirmClick(self):
         """
-        When item is selected in list the value copied to the clipboard
+        Create the Copy and Close Buttons
         """
         selectionValue = self.treeView.item(self.treeView.selection()[0])["values"][0]
         self.controller.copyClipboard(selectionValue)
+        self.master.destroy()
+        
+
+    def cancelClick(self):
+        """
+        Close the window
+        """
+        self.master.destroy()
