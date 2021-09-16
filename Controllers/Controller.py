@@ -5,7 +5,7 @@ import keyboard
 
 class Controller(Thread):
 
-    def __init__(self, inputWait="ctrl+shift+v"):
+    def __init__(self, inputWait="ctrl+alt+v"):
         super(Controller, self).__init__()
         self.inputWait = inputWait
         self.clipboardData = None
