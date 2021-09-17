@@ -25,11 +25,11 @@ class ClipboardPoller(Thread, Logger.Logger):
         """
         Check to see if the clipboard has changed
         """
-        currentClipboardItem = pyperclip.paste()
-        if currentClipboardItem != self.currentClipboardItem:
-            self.clipboardChange(currentClipboardItem)
-        time.sleep(timeSeconds)
-        self.checkItem()
+        while True:
+            currentClipboardItem = pyperclip.paste()
+            if currentClipboardItem != self.currentClipboardItem:
+                self.clipboardChange(currentClipboardItem)
+            time.sleep(timeSeconds)
 
     def clipboardChange(self, item=None):
         """
