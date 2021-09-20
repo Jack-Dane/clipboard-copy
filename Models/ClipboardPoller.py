@@ -1,16 +1,18 @@
 
 import pyperclip, time
 from threading import Thread
-from . import Logger
+from .Logger import Logger
+from .Subject import Subject
 
 
-class ClipboardPoller(Thread, Logger.Logger):
+class ClipboardPoller(Thread, Logger, Subject):
 
     def __init__(self):
         super(ClipboardPoller, self).__init__()
         self.setupLogging("Logs/main.log")
         self.clipboardStack = []
         self.currentClipboardItem = ""
+        self.observers = []
 
     def run(self):
         """
@@ -40,6 +42,7 @@ class ClipboardPoller(Thread, Logger.Logger):
         self.currentClipboardItem = item
         self.clipboardStack.insert(0, item)
         self.loggingChange(self.currentClipboardItem)
+        self.notifyObservers()
 
     def newClipboardValue(self, clipboardValue):
         """

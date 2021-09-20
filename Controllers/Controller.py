@@ -35,17 +35,15 @@ class Controller(Thread):
         When it does, intialise the view attached
         """
         keyboard.wait(self.inputWait)
-        self.initialiseView()
+        
+        # start UI on another thread
+        thread =  Thread(target = self.initialiseView)
+        thread.start()
+        
         self.waitForInput()
 
     def initialiseView(self):
         """
-        Open the TKinter window which will show the
+        Open the TKinter window and attach model
         """
-        self.view.initialiseView(self.clipboardData.clipboardStack, self)
-
-    def copyClipboard(self, clipboardText):
-        """
-        Copy the selected text into the users clipboard
-        """
-        self.clipboardData.newClipboardValue(clipboardText)
+        self.view.initialiseView(self.clipboardData)
