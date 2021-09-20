@@ -1,10 +1,9 @@
 
 import tkinter as tk
 from tkinter import ttk
-from .Observer import Observer
 
 
-class StaticViewCreator(Observer):
+class StaticViewCreator():
 
     @staticmethod
     def initialiseView(model):
@@ -29,7 +28,7 @@ class Application(tk.Frame, StaticViewCreator):
         
         self.model = model
         self.model.addObserver(self)
-        self.clipboardStack = self.model.clipboardStack
+        self.clipboardStack = self.model.getData()
 
         self.configureStyles()
         self.pack()
@@ -81,7 +80,7 @@ class Application(tk.Frame, StaticViewCreator):
         Attach the tree widget to the clipboard list in the model
         """
         self.clipboardStack = self.model.clipboardStack
-        for clipboard in self.clipboardStack:
+        for clipboard in self.model.getData():
             self.treeView.insert("", tk.END, values=(clipboard,))
 
     def confirmClick(self):
@@ -89,7 +88,7 @@ class Application(tk.Frame, StaticViewCreator):
         Create the Copy and Close Buttons
         """
         selectionValue = self.treeView.item(self.treeView.selection()[0])["values"][0]
-        self.model.copyClipboard(selectionValue)
+        self.model.newClipboardValue(selectionValue)
         self.master.destroy()
 
     def cancelClick(self):
@@ -111,7 +110,7 @@ class Application(tk.Frame, StaticViewCreator):
         """
         self.treeView.insert("", tk.END, values=(copyItem, ))
 
-    def update(self, data):
+    def update(self):
         """
         Called when the model is updated
         """

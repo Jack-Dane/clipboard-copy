@@ -50,3 +50,6 @@ class ClipboardPoller(Thread, Logger, Subject):
         :param clipboardValue: New clipboard value
         """
         pyperclip.copy(clipboardValue)
+
+    def getData(self):
+        return self.clipboardStack
