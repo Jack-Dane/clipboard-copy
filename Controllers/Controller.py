@@ -34,13 +34,9 @@ class Controller(Thread):
         Wait till the keyboard input matches watched specified
         When it does, intialise the view attached
         """
-        keyboard.wait(self.inputWait)
-        
-        # start UI on another thread
-        thread =  Thread(target = self.initialiseView)
-        thread.start()
-        
-        self.waitForInput()
+        while True:
+            keyboard.wait(self.inputWait)
+            self.initialiseView()
 
     def initialiseView(self):
         """

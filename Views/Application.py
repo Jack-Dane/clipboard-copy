@@ -112,8 +112,7 @@ class Application(tk.Frame, StaticViewCreator):
 
     def update(self):
         """
-        Called when the model is updated
+        Called when the model is updated, instead of updating incase of deletion 
         """
-        super(Application, self).update()
         self.clearTreeWidget()
         self.attachTreeWidget()

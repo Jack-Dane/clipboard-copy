@@ -13,3 +13,5 @@ clipboard is polled every second looking for updates.
 - To run on linux you need to run with Sudo otherwise the keyboard 
 library will not be able to listen to keyboard input ```sudo python3
  main.py```.
+## Assets
+icon.png - Icons made by [Freepik](https://www.freepik.com") from www.flaticon.com
