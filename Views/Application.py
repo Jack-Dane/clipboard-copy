@@ -6,20 +6,20 @@ from tkinter import ttk
 class StaticViewCreator():
 
     @staticmethod
-    def initialiseView(model):
+    def initialiseView(model, clipboardQueue):
         """
         Intialises the Application View
         :param clipboardStack: a list of clipboard items
         :param controller: the controller which is calling the view
         """
         root = tk.Tk()
-        view = Application(model, master=root)
+        view = Application(model, clipboardQueue, master=root)
         view.mainloop()
 
 
 class Application(tk.Frame, StaticViewCreator):
 
-    def __init__(self, model, master=None):
+    def __init__(self, model, clipboardQueue, master=None):
         super().__init__(master)
         self.master = master
         self.master.configure(background="#2b2b2b")
@@ -27,7 +27,6 @@ class Application(tk.Frame, StaticViewCreator):
         self.master.iconphoto(False, tk.PhotoImage(file="Assets/icon.png"))
         
         self.model = model
-        self.model.addObserver(self)
         self.clipboardStack = self.model.getData()
 
         self.configureStyles()
@@ -35,6 +34,9 @@ class Application(tk.Frame, StaticViewCreator):
 
         self.configureTreeWidget()
         self.configureButtons()
+
+        self.clipboardQueue = clipboardQueue
+        self.master.after(100, self.checkForUpdated)
 
     def configureStyles(self):
         """
@@ -110,9 +112,19 @@ class Application(tk.Frame, StaticViewCreator):
         """
         self.treeView.insert("", tk.END, values=(copyItem, ))
 
+    def checkForUpdated(self):
+        """
+        If new item has been added to the clipboard queue, update the list items
+        """
+        if not self.clipboardQueue.empty():
+            self.update()
+            self.clipboardQueue.clear()
+
+        self.master.after(100, self.checkForUpdated)
+
     def update(self):
         """
-        Called when the model is updated, instead of updating incase of deletion 
+        Called when the model is updated, instead of updating incase of other CRUD methods
         """
         self.clearTreeWidget()
         self.attachTreeWidget()

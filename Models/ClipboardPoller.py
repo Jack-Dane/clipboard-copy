@@ -2,17 +2,17 @@
 import pyperclip, time
 from threading import Thread
 from .Logger import Logger
-from .Subject import Subject
 
 
-class ClipboardPoller(Thread, Logger, Subject):
+class ClipboardPoller(Thread, Logger):
 
-    def __init__(self):
+    def __init__(self, clipboardQueue):
         super(ClipboardPoller, self).__init__()
         self.setupLogging("Logs/main.log")
+        self.clipboardQueue = clipboardQueue
         self.clipboardStack = []
         self.currentClipboardItem = ""
-        self.observers = []
+        self.ignoreNext = False
 
     def run(self):
         """
@@ -29,8 +29,9 @@ class ClipboardPoller(Thread, Logger, Subject):
         """
         while True:
             currentClipboardItem = pyperclip.paste()
-            if currentClipboardItem != self.currentClipboardItem:
+            if currentClipboardItem != self.currentClipboardItem and not self.ignoreNext:
                 self.clipboardChange(currentClipboardItem)
+            self.ignoreNext = False
             time.sleep(timeSeconds)
 
     def clipboardChange(self, item=None):
@@ -39,16 +40,17 @@ class ClipboardPoller(Thread, Logger, Subject):
         :param item: Copied item, could be none and will grab the newest item
         """
         item = item or pyperclip.paste()
+        self.clipboardQueue.put(item)
         self.currentClipboardItem = item
         self.clipboardStack.insert(0, item)
         self.loggingChange(self.currentClipboardItem)
-        self.notifyObservers()
 
     def newClipboardValue(self, clipboardValue):
         """
         Change the current clipboard without effecting Clipboard Data
         :param clipboardValue: New clipboard value
         """
+        self.ignoreNext = True
         pyperclip.copy(clipboardValue)
 
     def getData(self):

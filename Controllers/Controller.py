@@ -5,10 +5,11 @@ import keyboard
 
 class Controller(Thread):
 
-    def __init__(self, inputWait="ctrl+alt+v"):
+    def __init__(self, clipboardQueue, inputWait="ctrl+alt+v"):
         super(Controller, self).__init__()
         self.inputWait = inputWait
         self.clipboardData = None
+        self.clipboardQueue = clipboardQueue
         self.view = None
 
     def run(self):
@@ -42,4 +43,5 @@ class Controller(Thread):
         """
         Open the TKinter window and attach model
         """
-        self.view.initialiseView(self.clipboardData)
+        self.clipboardQueue.clear()
+        self.view.initialiseView(self.clipboardData, self.clipboardQueue)
