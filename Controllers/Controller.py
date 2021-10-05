@@ -5,10 +5,11 @@ import keyboard
 
 class Controller(Thread):
 
-    def __init__(self, inputWait="ctrl+alt+v"):
+    def __init__(self, clipboardQueue, inputWait="ctrl+alt+v"):
         super(Controller, self).__init__()
         self.inputWait = inputWait
         self.clipboardData = None
+        self.clipboardQueue = clipboardQueue
         self.view = None
 
     def run(self):
@@ -34,18 +35,13 @@ class Controller(Thread):
         Wait till the keyboard input matches watched specified
         When it does, intialise the view attached
         """
-        keyboard.wait(self.inputWait)
-        self.initialiseView()
-        self.waitForInput()
+        while True:
+            keyboard.wait(self.inputWait)
+            self.initialiseView()
 
     def initialiseView(self):
         """
-        Open the TKinter window which will show the
+        Open the TKinter window and attach model
         """
-        self.view.initialiseView(self.clipboardData.clipboardStack, self)
-
-    def copyClipboard(self, clipboardText):
-        """
-        Copy the selected text into the users clipboard
-        """
-        self.clipboardData.newClipboardValue(clipboardText)
+        self.clipboardQueue.clear()
+        self.view.initialiseView(self.clipboardData, self.clipboardQueue)
