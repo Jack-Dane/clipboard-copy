@@ -73,7 +73,7 @@ class Application(tk.Frame, StaticViewCreator):
         """
         treeViewColumns = ("#1",)
         self.treeView = ttk.Treeview(self.master, columns=treeViewColumns, show="headings", 
-                                     takefocus=False, style="DarkTheme.Treeview")
+                                     takefocus=False)
         self.treeView.heading("#1", text="Clipboard Text")
         self.attachTreeWidget()
 
