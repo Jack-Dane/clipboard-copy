@@ -24,6 +24,7 @@ class Application(tk.Frame, StaticViewCreator):
         self.master = master
         self.master.configure(background="#2b2b2b")
         self.master.title("Clipboard")
+        self.master.resizable(width=False, height=False)
         self.master.iconphoto(False, tk.PhotoImage(file="Assets/icon.png"))
         
         self.model = model
@@ -44,6 +45,7 @@ class Application(tk.Frame, StaticViewCreator):
         """
         self.style = ttk.Style()
         self.style.configure("DarkTheme.TButton", foreground="#e3e3e3", background="#2b2b2b")
+        self.style.map("DarkTheme.TButton", background=[("active", "#007804")])
         self.style.configure("DarkTheme.TFrame", foreground="#e3e3e3", background="#2b2b2b")
 
     def configureButtons(self):
@@ -71,7 +73,7 @@ class Application(tk.Frame, StaticViewCreator):
         """
         treeViewColumns = ("#1",)
         self.treeView = ttk.Treeview(self.master, columns=treeViewColumns, show="headings", 
-                                     takefocus=False)
+                                     takefocus=False, style="DarkTheme.Treeview")
         self.treeView.heading("#1", text="Clipboard Text")
         self.attachTreeWidget()
 
