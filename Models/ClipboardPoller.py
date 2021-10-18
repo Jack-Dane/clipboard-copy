@@ -1,19 +1,19 @@
 
-import pyperclip, time
+import pyperclip, time, logging
+
 from threading import Thread
-from .Logger import Logger
 
 
-class ClipboardPoller(Thread, Logger):
+class ClipboardPoller(Thread):
 
     def __init__(self, clipboardQueue):
         super(ClipboardPoller, self).__init__()
-        self.setupLogging("Logs/main.log")
         self.clipboardQueue = clipboardQueue
         self.clipboardStack = []
         self.currentClipboardItem = ""
         self.ignoreNext = False
         self.maxLength = 30
+        logging.basicConfig(filename="Logs/main.log", level=logging.INFO)
 
     def run(self):
         """
@@ -44,7 +44,7 @@ class ClipboardPoller(Thread, Logger):
         self.clipboardQueue.put(item)
         self.currentClipboardItem = item
         self.addItemToStack(item)
-        self.loggingChange(self.currentClipboardItem)
+        logging.info(f"Clipboard Change {item}")
 
     def addItemToStack(self, item):
         """
