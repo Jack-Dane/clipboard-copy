@@ -13,6 +13,7 @@ class ClipboardPoller(Thread, Logger):
         self.clipboardStack = []
         self.currentClipboardItem = ""
         self.ignoreNext = False
+        self.maxLength = 30
 
     def run(self):
         """
@@ -42,8 +43,17 @@ class ClipboardPoller(Thread, Logger):
         item = item or pyperclip.paste()
         self.clipboardQueue.put(item)
         self.currentClipboardItem = item
-        self.clipboardStack.insert(0, item)
+        self.addItemToStack(item)
         self.loggingChange(self.currentClipboardItem)
+
+    def addItemToStack(self, item):
+        """
+        Add item to the stack and keep track of total length
+        :param item: Copied item to add to the stack
+        """
+        self.clipboardStack.insert(0, item)
+        if len(self.clipboardStack) >= self.maxLength:
+            self.clipboardStack = self.clipboardStack[:self.maxLength]
 
     def newClipboardValue(self, clipboardValue):
         """
