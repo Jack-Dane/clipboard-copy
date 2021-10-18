@@ -1,6 +1,11 @@
 # Clipboard Storage
 This application stores your copy clipboard items in memory which
-can be brought up using the command ctrl+alt+v. 
+can be brought up using the command ctrl+alt+v.
+## Setup
+To start the clipboard-copy application you must first install the 
+library dependencies in the requirements.txt file. You can do this by
+running ```pip3 install -r requirments.txt```, once these have been 
+installed you will be good to run the application! 
 ## Configuration
 - Logging file is stored in Logs/main.log, this stores all copies
 recorded.
