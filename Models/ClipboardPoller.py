@@ -1,5 +1,5 @@
 
-import pyperclip, time, logging
+import pyperclip, time, logging, os
 
 from threading import Thread
 
@@ -13,7 +13,7 @@ class ClipboardPoller(Thread):
         self.currentClipboardItem = ""
         self.ignoreNext = False
         self.maxLength = 30
-        logging.basicConfig(filename="Logs/main.log", level=logging.INFO)
+        self.createCheckLoggingFile("Logs/main.log")
 
     def run(self):
         """
@@ -54,6 +54,15 @@ class ClipboardPoller(Thread):
         self.clipboardStack.insert(0, item)
         if len(self.clipboardStack) >= self.maxLength:
             self.clipboardStack = self.clipboardStack[:self.maxLength]
+
+    def createCheckLoggingFile(self, fileLocation):
+        """
+        Create the logging directory if it has been deleted
+        :param fileLocation: the file location of the log file
+        """
+        os.makedirs(os.path.dirname(fileLocation), exist_ok=True)
+        logging.basicConfig(filename=fileLocation, level=logging.INFO)
+
 
     def newClipboardValue(self, clipboardValue):
         """
