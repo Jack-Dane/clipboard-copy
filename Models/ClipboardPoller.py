@@ -22,22 +22,25 @@ class ClipboardPoller(Thread):
         super(ClipboardPoller, self).run()
         currentClipboardItem = pyperclip.paste()
         self.clipboardChange(currentClipboardItem)
-        self.checkItem()
+        self.checkItemLoop()
 
-    def checkItem(self, timeSeconds=1):
+    def checkItemLoop(self, timeSeconds=1):
         """
         Check to see if the clipboard has changed
         """
         while True:
+            self._checkItem()
+            time.sleep(timeSeconds)
+
+    def _checkItem(self):
             currentClipboardItem = pyperclip.paste()
             if currentClipboardItem != self.currentClipboardItem and not self.ignoreNext:
                 self.clipboardChange(currentClipboardItem)
             self.ignoreNext = False
-            time.sleep(timeSeconds)
 
     def clipboardChange(self, item=None):
         """
-        Change the current item and add the new item to the begining of the list
+        Change the current item and add the new item to the beginning of the list
         :param item: Copied item, could be none and will grab the newest item
         """
         item = item or pyperclip.paste()
