@@ -1,7 +1,10 @@
 
-import pyperclip, time, logging, os
-
 from threading import Thread
+
+import logging
+import os
+import pyperclip
+import time
 
 
 class ClipboardPoller(Thread):
@@ -26,17 +29,20 @@ class ClipboardPoller(Thread):
 
     def checkItemLoop(self, timeSeconds=1):
         """
-        Check to see if the clipboard has changed
+        Initialise loop to see if item has changed
         """
         while True:
             self._checkItem()
             time.sleep(timeSeconds)
 
     def _checkItem(self):
-            currentClipboardItem = pyperclip.paste()
-            if currentClipboardItem != self.currentClipboardItem and not self.ignoreNext:
-                self.clipboardChange(currentClipboardItem)
-            self.ignoreNext = False
+        """
+        Check to see if clipboard has changed
+        """
+        currentClipboardItem = pyperclip.paste()
+        if currentClipboardItem != self.currentClipboardItem and not self.ignoreNext:
+            self.clipboardChange(currentClipboardItem)
+        self.ignoreNext = False
 
     def clipboardChange(self, item=None):
         """
