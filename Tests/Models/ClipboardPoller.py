@@ -1,4 +1,6 @@
 
+import logging
+
 from unittest import TestCase
 from unittest.mock import MagicMock, patch
 
@@ -98,7 +100,10 @@ class ClipboardPollerAddItemToStackTest(TestCase):
 
 class ClipboardPollerClipboardChange(TestCase):
 
-    def setUp(self):
+    @patch("logging.basicConfig")
+    @patch("logging.info")
+    @patch("os.makedirs")
+    def setUp(self, loggingBasicConfig, loggingInfo, osMakedirs):
         self.clipboardItem = "New Clipboard"
         self.clipboardQueue = MagicMock()
         self.clipboardQueue.put = MagicMock()
