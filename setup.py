@@ -1,8 +1,10 @@
 
 from setuptools import setup
 import os
+import platform
 
-os.system("sudo apt-get install xclip")
+if platform.system() == "Linux":
+    os.system("sudo apt-get install xclip")
 
 setup(
     name="Clipboard Copier",
