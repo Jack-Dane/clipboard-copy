@@ -9,12 +9,13 @@ import time
 
 class ClipboardPoller(Thread):
 
-    def __init__(self, clipboardQueue):
+    def __init__(self, stoppingEvent, clipboardQueue):
         super(ClipboardPoller, self).__init__()
         self.clipboardQueue = clipboardQueue
         self.clipboardStack = []
         self.currentClipboardItem = ""
         self.ignoreNext = False
+        self.stoppingEvent = stoppingEvent
         self.maxLength = 30
         self.createCheckLoggingFile("Logs/main.log")
 
@@ -31,7 +32,7 @@ class ClipboardPoller(Thread):
         """
         Initialise loop to see if item has changed
         """
-        while True:
+        while not self.stoppingEvent.is_set():
             self._checkItem()
             time.sleep(timeSeconds)
 
@@ -83,3 +84,6 @@ class ClipboardPoller(Thread):
 
     def getData(self):
         return self.clipboardStack
+
+    def stop(self):
+        self.stop = True

@@ -1,14 +1,19 @@
 import sys
+import threading
+import time
 
 from Models import ClipboardPoller, QueueObject
 from Views import Application
 from Controllers import Controller
 
+threads = []
+stoppingEvent = threading.Event()
+
 
 def main():
     clipboardQueue = QueueObject()
-    clipboardPoller = ClipboardPoller(clipboardQueue)
-    clipboardPoller.daemon = True
+    clipboardPoller = ClipboardPoller(stoppingEvent, clipboardQueue)
+    threads.append(clipboardPoller)
     clipboardPoller.start()
 
     controller = Controller(clipboardQueue)
@@ -17,12 +22,19 @@ def main():
     controller.daemon = True
     controller.start()
 
-    clipboardPoller.join()
-    controller.join()
+    checkForInterrupt()
+
+
+def checkForInterrupt():
+    try:
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        stoppingEvent.set()
+        for thread in threads:
+            thread.join()
+        print("Stopped Clipboard-Copy Application")
 
 
 if __name__ == "__main__":
-    try:
-        main()
-    except KeyboardInterrupt:
-        sys.exit("Terminating Clipboard-Copy Application")
+    main()
